@@ -1,40 +1,12 @@
 import logging
-import asyncio
-
-from typing import Any
 
 import rich
 import click
-import aiohttp
 
 from .config import Settings, App
-from . import commands
+from . import utils, commands
 
 logger = logging.getLogger(__name__)
-
-
-def _add_session(func):
-    async def add_session_wrapper(context, *args, **kwargs):
-        api = context.obj.settings.api
-        async with aiohttp.ClientSession(api) as session:
-            context.obj.session = session
-            result = await func(context, *args, **kwargs)
-        return result
-    return add_session_wrapper
-
-
-def _run_async_command(func, *args, **kwargs) -> Any:
-    func = _add_session(func)
-    return asyncio.run(func(*args, **kwargs))
-
-
-def _filter_and_add(kwargs_dict, **kwargs):
-    filtered = {}
-    for name, val in kwargs_dict.items():
-        if val:
-            filtered.update({name: val})
-    filtered.update(kwargs)
-    return filtered
 
 
 @click.group()
@@ -52,7 +24,8 @@ def _filter_and_add(kwargs_dict, **kwargs):
               help="Config file.")
 @click.pass_context
 def cli_commands(context, **kwargs):
-    filtered = _filter_and_add(kwargs)
+    """CLI commands."""
+    filtered = utils.filter_none(kwargs)
     settings = Settings(**filtered)
     rich.inspect(settings)
     if not click.confirm("Are these settings correct?", default=False):
@@ -67,10 +40,11 @@ def cli_commands(context, **kwargs):
 @click.pass_context
 def get_token(*args, **kwargs):
     """Get token."""
-    return _run_async_command(commands.get_token, *args, **kwargs)
+    return utils.run_async_command(commands.get_token, *args, **kwargs)
 
 
 def main():
+    """Main function"""
     cli_commands()  # pylint: disable=no-value-for-parameter
 
 
