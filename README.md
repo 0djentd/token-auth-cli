@@ -3,6 +3,11 @@
 ## Description
 Simple tool for testing token authentication during development.
 
+## Installation
+```
+pip install token-auth-cli
+```
+
 ## How to use
 ```
 token-auth-cli
