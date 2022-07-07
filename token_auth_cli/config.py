@@ -1,6 +1,9 @@
+import logging
 from typing import Optional, Any
 
 from pydantic import BaseModel, BaseSettings
+
+logger = logging.getLogger(__name__)
 
 
 class Settings(BaseSettings):
@@ -10,6 +13,8 @@ class Settings(BaseSettings):
     api_get: str = "/api/"
     debug: bool = False
     verbose: bool = False
+    show_settings: bool = True
+    confirm_settings: bool = True
     config: Optional[str] = ".token_auth_cli_config.toml"
 
     class Config:

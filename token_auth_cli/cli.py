@@ -14,6 +14,10 @@ logger = logging.getLogger(__name__)
               help="Show additional information")
 @click.option("-d", "--debug/--no-debug",
               help="Show debug information")
+@click.option("--confirm-settings", type=bool,
+              help="Confirm settings before trying to get token.")
+@click.option("--show-settings", type=bool,
+              help="Show settings before trying to get token.")
 @click.option("--api", type=str,
               help="API url.")
 @click.option("--api-get-token", type=str,
@@ -27,11 +31,14 @@ def cli_commands(context, **kwargs):
     """CLI commands."""
     filtered = utils.filter_none(kwargs)
     settings = Settings(**filtered)
-    rich.inspect(settings)
-    if not click.confirm("Are these settings correct?", default=False):
-        raise click.Abort
+    if settings.show_settings:
+        rich.inspect(settings)
+    if settings.confirm_settings:
+        if not click.confirm("Are these settings correct?", default=False):
+            raise click.Abort
     app = App(settings=settings)
     context.obj = app
+    utils.show_if_debug(kwargs, filtered, settings, app)
 
 
 @cli_commands.command("get")

@@ -33,3 +33,8 @@ def filter_none(kwargs_dict):
             continue
         filtered.update({name: val})
     return filtered
+
+
+def show_if_debug(*args):
+    for obj in args:
+        logger.debug(obj)
