@@ -49,6 +49,8 @@ def cli_commands(context, **kwargs):
 @cli_commands.command("get")
 @click.option("--username", prompt="Username")
 @click.password_option("--password", prompt="Password")
+@click.option("--repeat/--no-repeat", default=False)
+@click.option("--repeat-interval", type=float, default=3.0)
 @click.pass_context
 def get_token(*args, **kwargs):
     """Get token."""
