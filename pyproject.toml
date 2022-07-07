@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "token-auth-cli"
-version = "0.1.1"
+version = "0.1.2"
 description = "Simple tool for testing token authentication during development."
 authors = ["0djentd"]
 readme = "README.md"
