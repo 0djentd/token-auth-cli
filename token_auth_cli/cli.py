@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 @click.group()
 @click.option("--verbose/--no-verbose",
               help="Show additional information")
-@click.option("-d", "--debug/--no-debug",
+@click.option("--debug/--no-debug",
               help="Show debug information")
 @click.option("--confirm-settings", type=bool,
               help="Confirm settings before trying to get token.")
@@ -24,13 +24,18 @@ logger = logging.getLogger(__name__)
               help="API url to use when trying to get token.")
 @click.option("--api-get", type=str,
               help="API url to check if token valid.")
-@click.option("--config", type=click.Path(),
+@click.option("--config",
+              type=click.Path(readable=True,
+                              file_okay=True, dir_okay=False),
+              default=".token_auth_cli_config.toml",
               help="Config file.")
 @click.pass_context
 def cli_commands(context, **kwargs):
     """CLI commands."""
     filtered = utils.filter_none(kwargs)
     settings = Settings(**filtered)
+    if settings.debug:
+        logging.basicConfig(level=logging.DEBUG)
     if settings.show_settings:
         rich.inspect(settings)
     if settings.confirm_settings:

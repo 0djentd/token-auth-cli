@@ -4,6 +4,7 @@ import asyncio
 from typing import Any
 
 import aiohttp
+import rich
 
 logger = logging.getLogger(__name__)
 
@@ -37,4 +38,5 @@ def filter_none(kwargs_dict):
 
 def show_if_debug(*args):
     for obj in args:
-        logger.debug(obj)
+        if logger.isEnabledFor(logging.DEBUG):
+            rich.inspect(obj)
