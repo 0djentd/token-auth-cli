@@ -150,6 +150,7 @@ python-versions = ">=3.6.3,<4.0.0"
 [package.dependencies]
 commonmark = ">=0.9.0,<0.10.0"
 pygments = ">=2.6.0,<3.0.0"
+typing-extensions = {version = ">=4.0.0,<5.0", markers = "python_version < \"3.9\""}
 
 [package.extras]
 jupyter = ["ipywidgets (>=7.5.1,<8.0.0)"]
@@ -184,8 +185,8 @@ multidict = ">=4.0"
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.10"
-content-hash = "ebaad6311728f065480bd12ecd2e2c4ab5da051a15f27f82dcde0ae508741cc7"
+python-versions = "^3.8"
+content-hash = "42666460a46fde6a2834eadb7766eea8167ead58beff6a7778275e128deaad7c"
 
 [metadata.files]
 aiohttp = [
