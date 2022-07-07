@@ -29,6 +29,7 @@ def filter_none(kwargs_dict):
     """Remove 'None' from dict."""
     filtered = {}
     for name, val in kwargs_dict.items():
-        if val:
-            filtered.update({name: val})
+        if val is None:
+            continue
+        filtered.update({name: val})
     return filtered
