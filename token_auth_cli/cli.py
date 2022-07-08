@@ -36,6 +36,7 @@ def cli_commands(context, **kwargs):
     settings = Settings(**filtered)
     if settings.debug:
         logging.basicConfig(level=logging.DEBUG)
+        logger.debug("--debug is enabled")
     if settings.show_settings:
         rich.inspect(settings)
     if settings.confirm_settings:
@@ -46,15 +47,47 @@ def cli_commands(context, **kwargs):
     utils.show_if_debug(kwargs, filtered, settings, app)
 
 
-@cli_commands.command("get")
+@cli_commands.command("login")
 @click.option("--username", prompt="Username")
 @click.password_option("--password", prompt="Password")
 @click.option("--repeat/--no-repeat", default=False)
 @click.option("--repeat-interval", type=float, default=3.0)
+@click.option("--store/--no-store", default=False,
+              help="Store token after successful login.")
 @click.pass_context
-def get_token(*args, **kwargs):
-    """Get token."""
-    return utils.run_async_command(commands.get_token, *args, **kwargs)
+def login(*args, **kwargs):
+    """Get token and store it."""
+    return utils.run_async_command(commands.login, *args, **kwargs)
+
+
+@cli_commands.command("relogin")
+@click.option("--username", prompt="Username")
+@click.option("--repeat/--no-repeat", default=False)
+@click.option("--repeat-interval", type=float, default=3.0)
+@click.pass_context
+def relogin(*args, **kwargs):
+    """Try to use stored token for authentication."""
+    return utils.run_async_command(commands.relogin, *args, **kwargs)
+
+
+@cli_commands.command("list")
+@click.pass_context
+def tokens_list(*args, **kwargs):
+    """List stored users/tokens."""
+    return utils.run_async_command(commands.tokens_list, *args, **kwargs)
+
+
+@cli_commands.command("remove")
+@click.pass_context
+def tokens_remove(*args, **kwargs):
+    """Remove stored user/token."""
+    return utils.run_async_command(commands.tokens_remove, *args, **kwargs)
+
+
+@cli_commands.command("init")
+def init(*args, **kwargs):
+    """Create config file and users/tokens storage."""
+    return utils.run_async_command(commands.init, *args, **kwargs)
 
 
 def main():

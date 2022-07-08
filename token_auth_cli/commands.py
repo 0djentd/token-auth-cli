@@ -1,31 +1,29 @@
 import logging
-import asyncio
-
 import rich
 
-from aiohttp.client_exceptions import ClientConnectionError
+from . import auth
 
 logger = logging.getLogger(__name__)
 
 
-async def get_token(context, **kwargs):
-    repeat = kwargs["repeat"]
-    app = context.obj
-    request_data = {"username": kwargs["username"],
-                    "password": kwargs["password"]}
+async def login(context, **kwargs):
+    """Try to login."""
+    user = auth.User(username=kwargs['username'], password=kwargs['password'])
+    async for token in auth.get_token(context, user, **kwargs):
+        rich.print(f"Token: {token}")
 
-    async def _try_to_get_token(app, request_data):
-        try:
-            async with app.session.post(
-                    app.settings.api_get_token, json=request_data) as req:
-                if req.status != 200:
-                    rich.print(f"[red]{req.status}[/red]")
-                else:
-                    rich.print("[green]OK[/green]")
-        except ClientConnectionError as err:
-            rich.print(f"[red]{err}[/red]")
 
-    await _try_to_get_token(app, request_data)
-    while repeat:
-        await asyncio.sleep(kwargs['repeat_interval'])
-        await _try_to_get_token(app, request_data)
+async def relogin(contex, **kwargs):
+    return
+
+
+async def tokens_list(context, **kwargs):
+    return
+
+
+async def tokens_remove(context, **kwargs):
+    return
+
+
+async def init(context, **kwargs):
+    return
