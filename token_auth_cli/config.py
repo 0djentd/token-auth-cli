@@ -6,6 +6,10 @@ from pydantic import (BaseModel,  # pylint: disable=no-name-in-module
 
 logger = logging.getLogger(__name__)
 
+"""
+user config -> directory config -> options
+"""
+
 
 class Settings(BaseSettings):
     """App config."""
@@ -16,7 +20,7 @@ class Settings(BaseSettings):
     verbose: bool = False
     show_settings: bool = True
     confirm_settings: bool = True
-    config: Optional[str] = ".token_auth_cli_config.toml"
+    store: bool = False
 
     class Config:
         env_prefix = "TOKEN_AUTH_CLI_SETTINGS_"
@@ -26,4 +30,5 @@ class Settings(BaseSettings):
 
 class App(BaseModel):
     settings: Settings
+    config: str
     session: Optional[Any] = None

@@ -1,4 +1,8 @@
 import logging
+import os
+
+import toml
+import click
 import rich
 
 from . import auth
@@ -26,4 +30,11 @@ async def tokens_remove(context, **kwargs):
 
 
 async def init(context, **kwargs):
-    return
+    app = context.obj
+    config = app.settings.dict()
+    if os.path.exists(app.config):
+        rich.print(f'[red]Config file "{app.config}" already exists.[/red]')
+        raise click.Abort
+    with open(app.config, "w", encoding="utf-8") as file:
+        config_str = toml.dump(config, file)
+    logger.debug(config_str)

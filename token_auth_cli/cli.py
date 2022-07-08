@@ -1,7 +1,9 @@
 import logging
+import os
 
 import rich
 import click
+import toml
 
 from .config import Settings, App
 from . import utils, commands
@@ -29,22 +31,34 @@ logger = logging.getLogger(__name__)
                               file_okay=True, dir_okay=False),
               default=".token_auth_cli_config.toml",
               help="Config file.")
+@click.option("--store", type=bool,
+              help="Store users/tokens.")
 @click.pass_context
 def cli_commands(context, **kwargs):
     """CLI commands."""
-    filtered = utils.filter_none(kwargs)
-    settings = Settings(**filtered)
-    if settings.debug:
+    config_path = kwargs["config"]
+    if (os.path.isfile(config_path) and os.path.exists(config_path)):
+        loaded_config = toml.load(config_path)
+    else:
+        loaded_config = {}
+    data = loaded_config.copy()
+    filtered_kwargs = utils.filter_none(kwargs)
+    filtered_kwargs = utils.filter_keys(filtered_kwargs, ["config"])
+    data.update(filtered_kwargs)
+    if kwargs['debug'] or data['debug']:
         logging.basicConfig(level=logging.DEBUG)
         logger.debug("--debug is enabled")
+    settings = Settings(**data)
     if settings.show_settings:
-        rich.inspect(settings)
+        rich.inspect(settings, title="Settings")
     if settings.confirm_settings:
         if not click.confirm("Are these settings correct?", default=False):
             raise click.Abort
-    app = App(settings=settings)
+    app = App(settings=settings, config=config_path)
     context.obj = app
-    utils.show_if_debug(kwargs, filtered, settings, app)
+    utils.show_if_debug(kwargs, loaded_config,
+                        filtered_kwargs,
+                        settings, app)
 
 
 @cli_commands.command("login")
@@ -85,6 +99,7 @@ def tokens_remove(*args, **kwargs):
 
 
 @cli_commands.command("init")
+@click.pass_context
 def init(*args, **kwargs):
     """Create config file and users/tokens storage."""
     return utils.run_async_command(commands.init, *args, **kwargs)
