@@ -19,6 +19,12 @@ Simple tool for testing token authentication during development.
 ```
 pip install token-auth-cli
 ```
+or
+```
+git clone https://github.com/0djentd/token-auth-cli.git
+cd token-auth-cli
+python -m pip install .
+```
 
 ## How to use
 ```
