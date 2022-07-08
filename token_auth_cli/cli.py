@@ -10,8 +10,13 @@ from . import utils, commands
 
 logger = logging.getLogger(__name__)
 
+_INFO_TEXT = """
+token-auth-cli
 
-@click.group()
+Simple tool for testing token authentication during development."""
+
+
+@click.group(help=_INFO_TEXT)
 @click.option("--verbose/--no-verbose",
               help="Show additional information")
 @click.option("--debug/--no-debug",
