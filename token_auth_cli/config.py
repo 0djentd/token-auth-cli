@@ -1,7 +1,8 @@
 import logging
 from typing import Optional, Any
 
-from pydantic import BaseModel, BaseSettings
+from pydantic import (BaseModel,  # pylint: disable=no-name-in-module
+                      BaseSettings)
 
 logger = logging.getLogger(__name__)
 
