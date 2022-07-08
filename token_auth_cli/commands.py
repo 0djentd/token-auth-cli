@@ -10,10 +10,12 @@ from . import auth
 logger = logging.getLogger(__name__)
 
 
-async def login(context, **kwargs):
+async def login(context,):
     """Try to login."""
-    user = auth.User(username=kwargs['username'], password=kwargs['password'])
-    async for token in auth.get_token(context, user, **kwargs):
+    settings = context.obj.settings
+    settings.check_login_data()
+    user = auth.User(username=settings.username, password=settings.password)
+    async for token in auth.get_token(context, user):
         rich.print(f"Token: {token}")
 
 

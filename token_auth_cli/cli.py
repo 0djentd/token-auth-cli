@@ -38,6 +38,10 @@ Simple tool for testing token authentication during development."""
               help="Config file.")
 @click.option("--store", type=bool,
               help="Store users/tokens.")
+@click.option("--username", type=str)
+@click.option("--password", type=str)
+@click.option("--repeat/--no-repeat", default=False)
+@click.option("--repeat-interval", type=float, default=3.0)
 @click.pass_context
 def cli_commands(context, **kwargs):
     """CLI commands."""
@@ -67,12 +71,6 @@ def cli_commands(context, **kwargs):
 
 
 @cli_commands.command("login")
-@click.option("--username", prompt="Username")
-@click.password_option("--password", prompt="Password")
-@click.option("--repeat/--no-repeat", default=False)
-@click.option("--repeat-interval", type=float, default=3.0)
-@click.option("--store/--no-store", default=False,
-              help="Store token after successful login.")
 @click.pass_context
 def login(*args, **kwargs):
     """Get token and store it."""
@@ -80,9 +78,6 @@ def login(*args, **kwargs):
 
 
 @cli_commands.command("relogin")
-@click.option("--username", prompt="Username")
-@click.option("--repeat/--no-repeat", default=False)
-@click.option("--repeat-interval", type=float, default=3.0)
 @click.pass_context
 def relogin(*args, **kwargs):
     """Try to use stored token for authentication."""

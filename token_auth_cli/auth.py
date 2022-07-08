@@ -22,9 +22,10 @@ class User(BaseModel):
                 "password": self.password}
 
 
-async def get_token(context, user: User, **kwargs) -> AsyncGenerator:
+async def get_token(context, user: User) -> AsyncGenerator:
     """Try to get token for user."""
-    repeat = kwargs["repeat"]
+    settings = context.obj.settings
+    repeat = settings.repeat
     app = context.obj
     request_data = user.login_data()
 
@@ -43,6 +44,6 @@ async def get_token(context, user: User, **kwargs) -> AsyncGenerator:
     while True:
         yield await _try_to_get_token(app, request_data)
         if repeat:
-            await asyncio.sleep(kwargs['repeat_interval'])
+            await asyncio.sleep(settings.repeat_interval)
         else:
             break
