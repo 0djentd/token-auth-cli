@@ -1,5 +1,6 @@
 import logging
 import asyncio
+import copy
 
 from typing import Any
 
@@ -29,10 +30,19 @@ def run_async_command(func, *args, **kwargs) -> Any:
 def filter_none(kwargs_dict):
     """Remove 'None' from dict."""
     filtered = {}
-    for name, val in kwargs_dict.items():
+    for key, val in kwargs_dict.items():
         if val is None:
             continue
-        filtered.update({name: val})
+        filtered.update({key: val})
+    return filtered
+
+
+def filter_keys(kwargs_dict, keys: list):
+    """Remove keys from dict."""
+    filtered = copy.copy(kwargs_dict)
+    for key in keys:
+        if key in filtered:
+            filtered.pop(key)
     return filtered
 
 
