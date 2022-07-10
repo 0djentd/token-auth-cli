@@ -28,9 +28,6 @@ python -m pip install .
 
 ## How to use
 ```
-token-auth-cli --help
-```
-```
 Usage: token-auth-cli [OPTIONS] COMMAND [ARGS]...
 
   token-auth-cli
